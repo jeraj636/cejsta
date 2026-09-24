@@ -1,6 +1,7 @@
-export function narediBuffer(gl, program, imeAtrbuta) {
-  if (!(gl instanceof WebGL2RenderingContext)) throw new Error("ni gl-ja");
-  if (!(program instanceof WebGLProgram)) throw new Error("ni prgrama");
+export function narediBuffer(
+  gl: WebGL2RenderingContext,
+  program: WebGLProgram,
+) {
   const tocke = [
     [-0.5, -0.5, 0, 0, 0],
     [0.5, -0.5, 0, 1, 0],
@@ -13,9 +14,12 @@ export function narediBuffer(gl, program, imeAtrbuta) {
   const buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, tockePodatki, gl.STATIC_DRAW);
-  const pozicijaTock = gl.getAttribLocation(program, imeAtrbuta);
-  const pozicijaTockTeksture = gl.getAttribLocation(program, "texChoodrs");
-
+  const pozicijaTock = gl.getAttribLocation(program, "a_tocke_pozicija");
+  const pozicijaTockTeksture = gl.getAttribLocation(
+    program,
+    "a_tekstura_koordinate",
+  );
+  if (pozicijaTockTeksture == -1) throw new Error("tu");
   gl.enableVertexAttribArray(pozicijaTock);
   gl.vertexAttribPointer(
     pozicijaTock,

@@ -1,7 +1,4 @@
-export function naloziTeksturo(pot, gl) {
-  if (!(gl instanceof WebGL2RenderingContext))
-    throw new Error("Napacen format parametra gl");
-
+export function naloziTeksturo(pot: string, gl: WebGL2RenderingContext) {
   return new Promise((resolve, reject) => {
     const tekstura = gl.createTexture();
 

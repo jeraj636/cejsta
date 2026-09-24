@@ -1,7 +1,7 @@
 #version 300 es
 
-in vec4 vertexPosition;
-in vec2 texChoodrs;
+in vec4 a_tocke_pozicija;
+in vec2 a_tekstura_koordinate;
 in vec2 a_objektPos;
 in vec2 a_objektVel;
 
@@ -28,7 +28,7 @@ mat4 premakni(vec2 p){
 
 void main()
 {
-    texChoordsf = texChoodrs;
+    texChoordsf = a_tekstura_koordinate;
     // Za zdaj ne bo rotacije
-    gl_Position = u_m_orto * premakni(a_objektPos) * povecaj(a_objektVel) * vertexPosition;
+    gl_Position = u_m_orto * premakni(a_objektPos) * povecaj(a_objektVel) * a_tocke_pozicija;
 }
