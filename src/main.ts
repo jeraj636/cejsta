@@ -1,7 +1,7 @@
 import { Barva } from "./components/barva.ts";
-import { narediBuffer } from "./services/bufferji.js";
+import { narediBuffer } from "./services/bufferji.ts";
 import { Objekt } from "./components/objekt.ts";
-import { narediProgram } from "./services/narediProgram.js";
+import { narediProgram } from "./services/narediProgram.ts";
 import { mat4 } from "gl-matrix";
 import { Ploscice } from "./components/ploscice.js";
 

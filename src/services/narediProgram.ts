@@ -1,4 +1,4 @@
-import { naloziSkript } from "./nalagalnikSkript.js";
+import { naloziSkript } from "./nalagalnikSkript.ts";
 
 export async function narediProgram(
   gl: WebGL2RenderingContext,

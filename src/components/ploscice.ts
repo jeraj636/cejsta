@@ -1,5 +1,5 @@
-import { narediBuffer } from "../services/bufferji.js";
-import { narediProgram } from "../services/narediProgram.js";
+import { narediBuffer } from "../services/bufferji.ts";
+import { narediProgram } from "../services/narediProgram.ts";
 import { naloziTeksturo } from "../services/textura.ts";
 import { vec2, mat4 } from "gl-matrix";
 
