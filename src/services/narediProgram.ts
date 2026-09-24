@@ -1,14 +1,18 @@
 import { naloziSkript } from "./nalagalnikSkript.js";
 
-export async function narediProgram(gl, vs, fs) {
+export async function narediProgram(
+  gl: WebGL2RenderingContext,
+  vs: string,
+  fs: string,
+) {
   const vertexShaderSource = await naloziSkript(vs);
   const fragmentShaderSource = await naloziSkript(fs);
 
-  const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+  const vertexShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
   gl.shaderSource(vertexShader, vertexShaderSource);
   gl.compileShader(vertexShader);
 
-  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER) as WebGLShader;
   gl.shaderSource(fragmentShader, fragmentShaderSource);
   gl.compileShader(fragmentShader);
 
@@ -17,7 +21,7 @@ export async function narediProgram(gl, vs, fs) {
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS))
-    throw new Error(gl.getProgramInfoLog(program));
+    throw new Error(gl.getProgramInfoLog(program) as string);
 
   return program;
 }
