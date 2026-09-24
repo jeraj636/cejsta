@@ -1,3 +1,4 @@
+import { PolarGridHelper } from "three/src/Three.Core.js";
 import { narediBuffer } from "../services/bufferji.ts";
 import { narediProgram } from "../services/narediProgram.ts";
 import { naloziTeksturo } from "../services/textura.ts";
@@ -5,10 +6,11 @@ import { vec2, mat4 } from "gl-matrix";
 
 export class Ploscice {
   private tekstura: WebGLTexture;
-  private static gl: WebGL2RenderingContext;
   private podatki: number[];
   private posebiBuffer: WebGLBuffer;
+  private vao: WebGLVertexArrayObject;
 
+  private static gl: WebGL2RenderingContext;
   private static program: WebGLProgram = -1;
   private static arraybuffer: WebGLBuffer = -1;
   private static pozLok: number;
@@ -33,18 +35,26 @@ export class Ploscice {
         "a_objektVel",
       );
       if (Ploscice.pozVel == -1) throw new Error("ni pozvel");
+      Ploscice.pozRot = Ploscice.gl.getAttribLocation(
+        Ploscice.program,
+        "a_objektRot",
+      );
+      if (Ploscice.pozVel == -1) throw new Error("ni pozrot");
     }
-    if (this.arraybuffer == -1) {
-      Ploscice.gl.useProgram(this.program);
-
+    if (Ploscice.arraybuffer == -1) {
       Ploscice.arraybuffer = narediBuffer(Ploscice.gl, Ploscice.program);
     }
   }
 
-  constructor(tekstura: WebGLTexture, posebiBufer: WebGLBuffer) {
+  constructor(
+    tekstura: WebGLTexture,
+    posebiBufer: WebGLBuffer,
+    vao: WebGLVertexArrayObject,
+  ) {
     this.tekstura = tekstura;
     this.podatki = [];
     this.posebiBuffer = posebiBufer;
+    this.vao = vao;
   }
 
   static async ustvari(slikicaPot: string) {
@@ -53,6 +63,39 @@ export class Ploscice {
       Ploscice.gl,
     )) as WebGLTexture;
 
+    Ploscice.gl.useProgram(this.program);
+
+    const vao = Ploscice.gl.createVertexArray()!;
+    Ploscice.gl.bindVertexArray(vao);
+
+    Ploscice.gl.bindBuffer(Ploscice.gl.ARRAY_BUFFER, Ploscice.arraybuffer);
+    const pozicijaTock = Ploscice.gl.getAttribLocation(
+      Ploscice.program,
+      "a_tocke_pozicija",
+    );
+
+    const pozicijaTeksture = Ploscice.gl.getAttribLocation(
+      Ploscice.program,
+      "a_tekstura_koordinate",
+    );
+    Ploscice.gl.enableVertexAttribArray(pozicijaTock);
+    Ploscice.gl.vertexAttribPointer(
+      pozicijaTock,
+      3,
+      Ploscice.gl.FLOAT,
+      false,
+      5 * Float32Array.BYTES_PER_ELEMENT,
+      0,
+    );
+    Ploscice.gl.enableVertexAttribArray(pozicijaTeksture);
+    Ploscice.gl.vertexAttribPointer(
+      pozicijaTeksture,
+      2,
+      Ploscice.gl.FLOAT,
+      false,
+      5 * Float32Array.BYTES_PER_ELEMENT,
+      3 * Float32Array.BYTES_PER_ELEMENT,
+    );
     const posebiBuffer = Ploscice.gl.createBuffer() as WebGLBuffer;
     Ploscice.gl.bindBuffer(Ploscice.gl.ARRAY_BUFFER, posebiBuffer);
 
@@ -79,7 +122,19 @@ export class Ploscice {
       2 * 4,
     );
     Ploscice.gl.vertexAttribDivisor(Ploscice.pozVel, 1);
-    return new Ploscice(tekstura, posebiBuffer);
+
+    Ploscice.gl.enableVertexAttribArray(Ploscice.pozRot);
+    Ploscice.gl.vertexAttribPointer(
+      Ploscice.pozRot,
+      1,
+      Ploscice.gl.FLOAT,
+      false,
+      stride,
+      4 * 4,
+    );
+    Ploscice.gl.vertexAttribDivisor(Ploscice.pozRot, 1);
+    Ploscice.gl.bindVertexArray(null);
+    return new Ploscice(tekstura, posebiBuffer, vao);
   }
 
   dodaj(poz: vec2, vel: vec2, rot: number) {
@@ -88,8 +143,10 @@ export class Ploscice {
 
   narisiNas(orto: mat4) {
     Ploscice.gl.useProgram(Ploscice.program);
-    Ploscice.gl.bindBuffer(Ploscice.gl.ARRAY_BUFFER, Ploscice.arraybuffer);
+
+    Ploscice.gl.bindVertexArray(this.vao);
     Ploscice.gl.bindBuffer(Ploscice.gl.ARRAY_BUFFER, this.posebiBuffer);
+
     Ploscice.gl.bufferData(
       Ploscice.gl.ARRAY_BUFFER,
       new Float32Array(this.podatki),
@@ -119,5 +176,6 @@ export class Ploscice {
       6,
       steviloObjektov,
     );
+    Ploscice.gl.bindVertexArray(null);
   }
 }
