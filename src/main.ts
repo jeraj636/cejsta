@@ -4,6 +4,7 @@ import { Objekt } from "./components/objekt.ts";
 import { narediProgram } from "./services/narediProgram.ts";
 import { mat4 } from "gl-matrix";
 import { Ploscice } from "./components/ploscice.js";
+import { perlin } from "./services/perlinNoise.ts";
 
 const platno = document.getElementById("platno") as HTMLCanvasElement;
 
@@ -27,24 +28,18 @@ gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 const odzadje = new Barva("#D0E2A6");
 
 await Objekt.init(gl);
-const kvadrat = await Objekt.ustvari(
-  [100, 100],
-  [700, 700],
-  "../assets/images/pot_obroba.png",
-);
-const kvadrat1 = await Objekt.ustvari(
-  [100, 100],
-  [800, 800],
-  "../assets/images/pot_obroba.png",
-);
-await Ploscice.init(gl);
-const ploscice = await Ploscice.ustvari("assets/images/pot_obroba.png");
-ploscice.dodaj([200, 400], [32, 32], 0);
-ploscice.dodaj([300, 400], [32, 32], 0);
-ploscice.dodaj([600, 550], [64, 64], 0);
 
-const ploscice2 = await Ploscice.ustvari("assets/images/pot_obroba.png");
-ploscice2.dodaj([250, 450], [32, 32], 0);
+await Ploscice.init(gl);
+
+const ploscice = await Ploscice.ustvari("assets/images/pot_obroba.png");
+
+let xPoz = platno.width / 2;
+for (let i = 0; i < platno.height; i += 30) {
+  ploscice.dodaj([xPoz, platno.height - i], [64, 64], 0);
+  let pVal = perlin(i / 100, Math.round(Math.random() * 1000));
+  xPoz += pVal * 70;
+  console.log(pVal);
+}
 
 setInterval(glavnaZanka, 16);
 const orto = mat4.create();
@@ -53,10 +48,7 @@ function glavnaZanka() {
   gl.clear(gl.COLOR_BUFFER_BIT);
   mat4.ortho(orto, 0, platno.width, platno.height, 0, -1, 1);
 
-  kvadrat.narisiMe(orto);
-  ploscice2.narisiNas(orto);
   ploscice.narisiNas(orto);
-  kvadrat1.narisiMe(orto);
 }
 
 function posodobiVelikost() {
