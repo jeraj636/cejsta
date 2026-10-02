@@ -3,20 +3,20 @@ import { narediBuffer } from "../services/bufferji.ts";
 import { narediProgram } from "../services/narediProgram.ts";
 import { naloziTeksturo } from "../services/textura.ts";
 import { vec2, mat4 } from "gl-matrix";
+import { ior } from "three/src/nodes/core/PropertyNode.js";
 
 export class Ploscice {
   private tekstura: WebGLTexture;
   private podatki: number[];
   private posebiBuffer: WebGLBuffer;
   private vao: WebGLVertexArrayObject;
+  private stPloscic: number = 0;
 
   private static gl: WebGL2RenderingContext;
   private static program: WebGLProgram = -1;
   private static arraybuffer: WebGLBuffer = -1;
   private static pozLok: number;
   private static pozVel: number;
-  private static pozRot: number;
-
   static async init(gl: WebGL2RenderingContext) {
     Ploscice.gl = gl;
     if (Ploscice.program == -1) {
@@ -35,11 +35,6 @@ export class Ploscice {
         "a_objektVel",
       );
       if (Ploscice.pozVel == -1) throw new Error("ni pozvel");
-      Ploscice.pozRot = Ploscice.gl.getAttribLocation(
-        Ploscice.program,
-        "a_objektRot",
-      );
-      if (Ploscice.pozVel == -1) throw new Error("ni pozrot");
     }
     if (Ploscice.arraybuffer == -1) {
       Ploscice.arraybuffer = narediBuffer(Ploscice.gl, Ploscice.program);
@@ -99,7 +94,7 @@ export class Ploscice {
     const posebiBuffer = Ploscice.gl.createBuffer() as WebGLBuffer;
     Ploscice.gl.bindBuffer(Ploscice.gl.ARRAY_BUFFER, posebiBuffer);
 
-    const stride = 5 * 4;
+    const stride = 4 * 4;
 
     Ploscice.gl.enableVertexAttribArray(Ploscice.pozLok);
     Ploscice.gl.vertexAttribPointer(
@@ -123,24 +118,39 @@ export class Ploscice {
     );
     Ploscice.gl.vertexAttribDivisor(Ploscice.pozVel, 1);
 
-    Ploscice.gl.enableVertexAttribArray(Ploscice.pozRot);
-    Ploscice.gl.vertexAttribPointer(
-      Ploscice.pozRot,
-      1,
-      Ploscice.gl.FLOAT,
-      false,
-      stride,
-      4 * 4,
-    );
-    Ploscice.gl.vertexAttribDivisor(Ploscice.pozRot, 1);
     Ploscice.gl.bindVertexArray(null);
+
     return new Ploscice(tekstura, posebiBuffer, vao);
   }
-
-  dodaj(poz: vec2, vel: vec2, rot: number) {
-    this.podatki.push(poz[0], poz[1], vel[0], vel[1], rot);
+  lenght() {
+    return this.stPloscic;
   }
-
+  dodaj(poz: vec2, vel: vec2) {
+    this.podatki.push(poz[0], poz[1], vel[0], vel[1]);
+    this.stPloscic += 1;
+  }
+  odbij() {
+    this.podatki.shift();
+    this.podatki.shift();
+    this.podatki.shift();
+    this.podatki.shift();
+    this.stPloscic -= 1;
+  }
+  premakniVse(zamik: vec2) {
+    for (let i = 0; i < this.podatki.length; i += 4) {
+      this.podatki[i] += zamik[0];
+      this.podatki[i + 1] += zamik[1];
+    }
+  }
+  at(i: number) {
+    i = Math.floor(i / 4) * 4;
+    return [
+      this.podatki[i],
+      this.podatki[i + 1],
+      this.podatki[i + 2],
+      this.podatki[i + 3],
+    ];
+  }
   narisiNas(orto: mat4) {
     Ploscice.gl.useProgram(Ploscice.program);
 
@@ -169,7 +179,7 @@ export class Ploscice {
 
     //morda bo delovalo
     //this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
-    const steviloObjektov = this.podatki.length / 5;
+    const steviloObjektov = this.podatki.length / 4;
     Ploscice.gl.drawArraysInstanced(
       Ploscice.gl.TRIANGLES,
       0,

@@ -25,6 +25,15 @@ platno.addEventListener("resize", posodobiVelikost);
 gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+// Input
+window.addEventListener("keydown", (event) => {
+  switch (event.key) {
+    case "ArrowUp":
+      ploscice.premakniVse([0, 1]);
+      break;
+  }
+});
+
 const odzadje = new Barva("#D0E2A6");
 
 await Objekt.init(gl);
@@ -34,11 +43,12 @@ await Ploscice.init(gl);
 const ploscice = await Ploscice.ustvari("assets/images/pot_obroba.png");
 
 let xPoz = platno.width / 2;
-for (let i = 0; i < platno.height; i += 30) {
-  ploscice.dodaj([xPoz, platno.height - i], [64, 64], 0);
-  let pVal = perlin(i / 100, Math.round(Math.random() * 1000));
+let visina = 0;
+let seme = Math.round(Math.random() * 1000);
+for (; visina < platno.height; visina += 30) {
+  ploscice.dodaj([xPoz, platno.height - visina], [64, 64]);
+  let pVal = perlin(visina / 350, seme);
   xPoz += pVal * 70;
-  console.log(pVal);
 }
 
 setInterval(glavnaZanka, 16);
@@ -49,6 +59,18 @@ function glavnaZanka() {
   mat4.ortho(orto, 0, platno.width, platno.height, 0, -1, 1);
 
   ploscice.narisiNas(orto);
+
+  if (ploscice.at(0)[1] >= platno.height) {
+    ploscice.odbij();
+    console.log("odbil");
+  }
+  if (ploscice.at(ploscice.lenght() - 1)[1] > 40) {
+    console.log("nekaj");
+    ploscice.dodaj([xPoz, platno.height - visina], [64, 64]);
+    let pVal = perlin(visina / 350, seme);
+    visina += 30;
+    xPoz += pVal * 70;
+  }
 }
 
 function posodobiVelikost() {

@@ -4,7 +4,6 @@ in vec4 a_tocke_pozicija;
 in vec2 a_tekstura_koordinate;
 in vec2 a_objektPos;
 in vec2 a_objektVel;
-in float a_objektRot;
 
 out vec2 texChoordsf;
 
