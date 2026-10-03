@@ -2,9 +2,10 @@ import { Barva } from "./components/barva.ts";
 import { narediBuffer } from "./services/bufferji.ts";
 import { Objekt } from "./components/objekt.ts";
 import { narediProgram } from "./services/narediProgram.ts";
-import { mat4 } from "gl-matrix";
+import { vec2, mat4 } from "gl-matrix";
 import { Ploscice } from "./components/ploscice.js";
 import { perlin } from "./services/perlinNoise.ts";
+import { Cesta, CestaFactoriy } from "./components/cesta.ts";
 
 const platno = document.getElementById("platno") as HTMLCanvasElement;
 
@@ -25,11 +26,20 @@ platno.addEventListener("resize", posodobiVelikost);
 gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+let pozicija = [0, 0] as vec2;
+let hitrost = 20;
 // Input
 window.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "ArrowUp":
-      ploscice.premakniVse([0, 1]);
+      pozicija[1] += 10;
+      break;
+    case "ArrowLeft":
+      pozicija[0] -= 10;
+
+      break;
+    case "ArrowRight":
+      pozicija[0] += 10;
       break;
   }
 });
@@ -38,44 +48,36 @@ const odzadje = new Barva("#D0E2A6");
 
 await Objekt.init(gl);
 
-await Ploscice.init(gl);
+await Cesta.init(gl);
 
-const ploscice = await Ploscice.ustvari("assets/images/pot_obroba.png");
-
-let xPoz = platno.width / 2;
-let visina = 0;
-let seme = Math.round(Math.random() * 1000);
-for (; visina < platno.height; visina += 30) {
-  ploscice.dodaj([xPoz, platno.height - visina], [64, 64]);
-  let pVal = perlin(visina / 350, seme);
-  xPoz += pVal * 70;
-}
+let cesta = await CestaFactoriy.ustvari(
+  "../assets/images/pot_obroba.png",
+  "../assets/images/pot_sredisce.png",
+  32,
+  [-128, platno.height + 128],
+  gl,
+  platno.width,
+);
 
 setInterval(glavnaZanka, 16);
+
 const orto = mat4.create();
+const kamera = mat4.create();
 function glavnaZanka() {
   gl.clearColor(odzadje.r, odzadje.g, odzadje.b, odzadje.a);
   gl.clear(gl.COLOR_BUFFER_BIT);
-  mat4.ortho(orto, 0, platno.width, platno.height, 0, -1, 1);
 
-  ploscice.narisiNas(orto);
+  mat4.identity(kamera);
+  mat4.translate(kamera, kamera, [-pozicija[0], -pozicija[1], 0]);
 
-  if (ploscice.at(0)[1] >= platno.height) {
-    ploscice.odbij();
-    console.log("odbil");
-  }
-  if (ploscice.at(ploscice.lenght() - 1)[1] > 40) {
-    console.log("nekaj");
-    ploscice.dodaj([xPoz, platno.height - visina], [64, 64]);
-    let pVal = perlin(visina / 350, seme);
-    visina += 30;
-    xPoz += pVal * 70;
-  }
+  cesta.narisiMe(orto, kamera);
+  cesta.posodobi(pozicija[1]);
+
+  mat4.ortho(orto, 0, platno.width, 0, platno.height, -1, 1);
 }
 
 function posodobiVelikost() {
   platno.width = platno.clientWidth;
   platno.height = platno.clientHeight;
-
   gl.viewport(0, 0, platno.width, platno.height);
 }

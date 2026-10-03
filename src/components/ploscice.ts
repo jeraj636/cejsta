@@ -151,7 +151,7 @@ export class Ploscice {
       this.podatki[i + 3],
     ];
   }
-  narisiNas(orto: mat4) {
+  narisiNas(orto: mat4, kamera: mat4) {
     Ploscice.gl.useProgram(Ploscice.program);
 
     Ploscice.gl.bindVertexArray(this.vao);
@@ -170,6 +170,12 @@ export class Ploscice {
       Ploscice.gl.getUniformLocation(Ploscice.program, "u_m_orto"),
       false,
       orto,
+    );
+
+    Ploscice.gl.uniformMatrix4fv(
+      Ploscice.gl.getUniformLocation(Ploscice.program, "u_m_kamera"),
+      false,
+      kamera,
     );
 
     Ploscice.gl.uniform1i(

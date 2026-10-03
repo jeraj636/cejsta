@@ -8,6 +8,7 @@ in vec2 a_objektVel;
 out vec2 texChoordsf;
 
 uniform mat4 u_m_orto;
+uniform mat4 u_m_kamera;
 
 mat4 povecaj(vec2 p){
     return mat4(
@@ -30,5 +31,5 @@ void main()
 {
     texChoordsf = a_tekstura_koordinate;
     // Za zdaj ne bo rotacije
-    gl_Position = u_m_orto * premakni(a_objektPos) * povecaj(a_objektVel) * a_tocke_pozicija;
+    gl_Position = u_m_orto * u_m_kamera * premakni(a_objektPos) * povecaj(a_objektVel) * a_tocke_pozicija;
 }
