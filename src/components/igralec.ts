@@ -6,9 +6,9 @@ export class Igralec {
   private rotacija: number;
   private prejsniKlic: number;
   private static HitrostObracanja = 0.002;
-  private static pospesek = 0.002; // Povprečen avto je med 3 in 4 m/s^2
+  private static pospesek = 0.0002; // Povprečen avto je med 3 in 4 m/s^2
   private static bremze = 0.001; // Povprečen avto je med 3 in 4 m/s^2
-  private static morotnoZaviranje = 0.0005;
+  private static morotnoZaviranje = 0.0001;
   private static maxHitrost = 0.7;
   private static maxNazaj = -0.25;
 

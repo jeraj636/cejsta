@@ -40,13 +40,16 @@ export class Cesta {
   }
 
   private generirajNovo() {
-    let perlinVrednost = perlin(this.visina / 100, this.seme);
+    let perlinVrednost =
+      perlin(this.visina / 15, this.seme) * 0.15 +
+      perlin(this.visina / 40, this.seme) * 0.25 +
+      perlin(this.visina / 120, this.seme) * 0.6;
 
     this.obrobe.dodaj([this.xPoz, this.visina], [128, 128]);
     this.sredisce.dodaj([this.xPoz, this.visina], [128, 128]);
 
-    this.visina += Cesta.korak;
-    this.xPoz += perlinVrednost * Cesta.korak * 2;
+    this.visina += Cesta.korak / 1.5;
+    this.xPoz += perlinVrednost * Cesta.korak * 2.5;
   }
 
   posodobi(visinaDejanska: number) {

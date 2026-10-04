@@ -60,24 +60,27 @@ let avto = await Objekt.ustvari(
 );
 let igralec = new Igralec([0, platno.height / 2]);
 
-setInterval(glavnaZanka, 2);
-
+requestAnimationFrame(glavnaZanka);
 const orto = mat4.create();
 let kamera = mat4.create();
-
+const id = mat4.create();
 function glavnaZanka() {
   gl.clearColor(odzadje.r, odzadje.g, odzadje.b, odzadje.a);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  mat4.ortho(orto, 0, platno.width, 0, platno.height, -1, 1);
+
   igralec.posodobi(inputStanje);
+
   kamera = igralec.kamera();
-  cesta.narisiMe(orto, kamera);
+
   cesta.posodobi(igralec.getPozicija()[1]);
 
-  let id = mat4.create();
+  cesta.narisiMe(orto, kamera);
+
   avto.narisiMe(orto, id, igralec.getRotacia());
 
-  mat4.ortho(orto, 0, platno.width, 0, platno.height, -1, 1);
+  requestAnimationFrame(glavnaZanka);
 }
 
 function posodobiVelikost() {
