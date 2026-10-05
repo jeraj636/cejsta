@@ -136,6 +136,9 @@ export class Ploscice {
     this.podatki.shift();
     this.stPloscic -= 1;
   }
+  izbrisi(indeks: number) {
+    this.podatki.splice(Math.floor(indeks / 4) * 4, 4);
+  }
   premakniVse(zamik: vec2) {
     for (let i = 0; i < this.podatki.length; i += 4) {
       this.podatki[i] += zamik[0];

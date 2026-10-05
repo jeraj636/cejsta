@@ -8,6 +8,7 @@ import { perlin } from "./services/perlinNoise.ts";
 import { Cesta, CestaFactoriy } from "./components/cesta.ts";
 import { or } from "three/src/nodes/math/OperatorNode.js";
 import { Igralec } from "./components/igralec.ts";
+import { GozdFactory } from "./components/gozd.ts";
 
 const platno = document.getElementById("platno") as HTMLCanvasElement;
 
@@ -52,6 +53,14 @@ let cesta = await CestaFactoriy.ustvari(
   platno.width,
 );
 
+let gozd = await GozdFactory.gozd(
+  "../assets/images/smreka.png",
+  "../assets/images/pot_obroba.png",
+  "../assets/images/pot_obroba.png",
+  1,
+  gl,
+);
+
 let avto = await Objekt.ustvari(
   [128, 128],
   [platno.width / 2, platno.height / 2],
@@ -71,11 +80,13 @@ function glavnaZanka() {
   mat4.ortho(orto, 0, platno.width, 0, platno.height, -1, 1);
 
   igralec.posodobi(inputStanje);
-
+  console.log(igralec.getPozicija());
   kamera = igralec.kamera();
 
-  cesta.posodobi(igralec.getPozicija()[1]);
+  gozd.posodobi(igralec.getPozicija());
+  gozd.narisiNas(orto, kamera);
 
+  cesta.posodobi(igralec.getPozicija()[1]);
   cesta.narisiMe(orto, kamera);
 
   avto.narisiMe(orto, id, igralec.getRotacia());

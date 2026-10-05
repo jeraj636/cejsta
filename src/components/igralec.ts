@@ -45,10 +45,10 @@ export class Igralec {
       if (this.hitrost < 0) this.hitrost = 0;
     }
 
-    if (input.has("ArrowLeft")) {
+    if (input.has("ArrowLeft") && Math.abs(this.hitrost) > 0) {
       this.rotacija += Igralec.HitrostObracanja * deltaCas;
     }
-    if (input.has("ArrowRight")) {
+    if (input.has("ArrowRight") && Math.abs(this.hitrost) > 0) {
       this.rotacija -= Igralec.HitrostObracanja * deltaCas;
     }
     this.pozicija[1] +=
