@@ -23,7 +23,7 @@ platno.width = platno.clientWidth;
 platno.height = platno.clientHeight;
 
 gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-platno.addEventListener("resize", posodobiVelikost);
+window.addEventListener("resize", posodobiVelikost);
 
 // Blending
 gl.enable(gl.BLEND);
@@ -78,12 +78,11 @@ function glavnaZanka() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   mat4.ortho(orto, 0, platno.width, 0, platno.height, -1, 1);
-
-  igralec.posodobi(inputStanje, cesta.povX());
-  console.log(igralec.getPozicija());
+  const povCesta = cesta.povX();
+  igralec.posodobi(inputStanje, povCesta);
   kamera = igralec.kamera();
 
-  gozd.posodobi(igralec.getPozicija());
+  gozd.posodobi(igralec.getPozicija(), povCesta);
   gozd.narisiNas(orto, kamera);
 
   cesta.posodobi(igralec.getPozicija()[1]);

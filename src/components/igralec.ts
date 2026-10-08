@@ -35,7 +35,6 @@ export class Igralec {
     return kameraMat;
   }
   posodobi(input: Set<string>, povX: number) {
-    console.log(this.pozicija);
     let casKlica = performance.now();
     let deltaCas = casKlica - this.prejsniKlic;
 

@@ -27,7 +27,7 @@ export class Gozd {
     this.mejeY = mejeY;
     this.obdelanaVisina = 0;
   }
-  posodobi(lokIgralca: vec2) {
+  posodobi(lokIgralca: vec2, povCeste: number) {
     if (this.obdelanaVisina - lokIgralca[1] > 6000) return;
 
     while (this.izvenMeje(this.smreka.at(0), lokIgralca)) this.smreka.odbij();
@@ -44,7 +44,8 @@ export class Gozd {
         );
 
         let nakljucnaVr = Math.random();
-        const mejnaVrednost = 1 - 0.0009;
+        const CestniFaktor = Math.abs(j - povCeste) / 1000;
+        const mejnaVrednost = 1 - 0.0009 * CestniFaktor;
         if (
           0 <= perlinVrednost &&
           perlinVrednost <= 0.25 &&
