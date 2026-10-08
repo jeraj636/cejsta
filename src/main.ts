@@ -48,14 +48,14 @@ let cesta = await CestaFactoriy.ustvari(
   "../assets/images/pot_obroba.png",
   "../assets/images/pot_sredisce.png",
   32,
-  [-platno.height, platno.height],
+  [-500, platno.height],
   gl,
   platno.width,
 );
 
 let gozd = await GozdFactory.gozd(
   "../assets/images/smreka.png",
-  "../assets/images/pot_obroba.png",
+  "../assets/images/drevo.png",
   "../assets/images/pot_obroba.png",
   1,
   gl,
@@ -64,10 +64,10 @@ let gozd = await GozdFactory.gozd(
 let avto = await Objekt.ustvari(
   [128, 128],
   [platno.width / 2, platno.height / 2],
-  Math.PI,
+  0,
   "../assets/images/avto.png",
 );
-let igralec = new Igralec([0, platno.height / 2]);
+let igralec = new Igralec([platno.width, platno.height]);
 
 requestAnimationFrame(glavnaZanka);
 const orto = mat4.create();
@@ -79,7 +79,7 @@ function glavnaZanka() {
 
   mat4.ortho(orto, 0, platno.width, 0, platno.height, -1, 1);
 
-  igralec.posodobi(inputStanje);
+  igralec.posodobi(inputStanje, cesta.povX());
   console.log(igralec.getPozicija());
   kamera = igralec.kamera();
 

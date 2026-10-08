@@ -2,6 +2,7 @@ import { mat4, vec2 } from "gl-matrix";
 import { Ploscice } from "./ploscice.ts";
 import { perlin } from "../services/perlinNoise.ts";
 import { abs } from "three/src/nodes/math/MathNode.js";
+import { setCurrentStack } from "three/src/nodes/tsl/TSLCore.js";
 
 export class Cesta {
   private obrobe: Ploscice;
@@ -31,9 +32,9 @@ export class Cesta {
     this.seme = seme;
     this.limita = limita;
 
-    this.visina = 0;
-    this.xPoz = sirina / 2;
-    let stIteracij = limita[1] / Cesta.korak;
+    this.visina = limita[0];
+    this.xPoz = 0;
+    let stIteracij = (limita[1] - limita[0]) / Cesta.korak;
     for (let i = 0; i < stIteracij; i++) {
       this.generirajNovo();
     }
@@ -53,7 +54,7 @@ export class Cesta {
   }
 
   posodobi(visinaDejanska: number) {
-    while (this.obrobe.at(0)[1] - visinaDejanska < this.limita[0]) {
+    while (this.obrobe.at(0)[1] < visinaDejanska - 3000) {
       this.obrobe.odbij();
       this.sredisce.odbij();
     }
@@ -63,6 +64,15 @@ export class Cesta {
     ) {
       this.generirajNovo();
     }
+  }
+  povX() {
+    let skup = 0;
+    for (let i = 0; i < this.obrobe.lenght(); i++) {
+      const x = this.obrobe.at(i)[0];
+      skup += x;
+    }
+    if (this.obrobe.lenght() != 0) return skup / this.obrobe.lenght();
+    return 0;
   }
   narisiMe(orto: mat4, kamera: mat4) {
     this.obrobe.narisiNas(orto, kamera);

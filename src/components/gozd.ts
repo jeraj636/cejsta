@@ -28,26 +28,38 @@ export class Gozd {
     this.obdelanaVisina = 0;
   }
   posodobi(lokIgralca: vec2) {
-    if (this.obdelanaVisina - lokIgralca[1] > 3000) return;
+    if (this.obdelanaVisina - lokIgralca[1] > 6000) return;
 
-    for (let i = 0; i < this.smreka.lenght(); i++) {
-      if (this.izvenMeje(this.smreka.at(i), lokIgralca)) {
-        this.smreka.izbrisi(i);
-      }
-    }
+    while (this.izvenMeje(this.smreka.at(0), lokIgralca)) this.smreka.odbij();
+
+    while (this.izvenMeje(this.lsitovec.at(0), lokIgralca))
+      this.lsitovec.odbij();
+
     const deljenje = 300;
-    for (let i = this.obdelanaVisina; i < lokIgralca[1] + 1000; i += 100) {
-      for (let j = lokIgralca[0] - 1000; j < lokIgralca[0] + 5000; j += 100) {
+    for (let i = this.obdelanaVisina; i < lokIgralca[1] + 6000; i += 5) {
+      for (let j = -3000; j < 3000; j += 5) {
         let perlinVrednost = perlin(
           (this.seme * i) / deljenje,
           (this.seme * j) / deljenje,
         );
-        if (Math.random() < perlinVrednost * 0.2) {
-          this.smreka.dodaj([j, i], [64, 64]);
-        }
+
+        let nakljucnaVr = Math.random();
+        const mejnaVrednost = 1 - 0.0009;
+        if (
+          0 <= perlinVrednost &&
+          perlinVrednost <= 0.25 &&
+          nakljucnaVr >= mejnaVrednost
+        )
+          this.smreka.dodaj([j, i], [32, 64]);
+        if (
+          0.25 <= perlinVrednost &&
+          perlinVrednost <= 0.5 &&
+          nakljucnaVr >= mejnaVrednost
+        )
+          this.lsitovec.dodaj([j, i], [32, 64]);
       }
     }
-    this.obdelanaVisina = lokIgralca[1] + 1000;
+    this.obdelanaVisina = lokIgralca[1] + 6000;
   }
   private izvenMeje(lokObjekta: vec2, lokIgralca: vec2) {
     if (lokIgralca[1] - lokObjekta[1] >= 3000) {
@@ -57,6 +69,7 @@ export class Gozd {
   }
   narisiNas(orto: mat4, kamera: mat4) {
     this.smreka.narisiNas(orto, kamera);
+    this.lsitovec.narisiNas(orto, kamera);
   }
 }
 export class GozdFactory {

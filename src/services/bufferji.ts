@@ -3,12 +3,12 @@ export function narediBuffer(
   program: WebGLProgram,
 ) {
   const tocke = [
-    [-0.5, -0.5, 0, 0, 0],
-    [0.5, -0.5, 0, 1, 0],
-    [0.5, 0.5, 0, 1, 1],
-    [0.5, 0.5, 0, 1, 1],
-    [-0.5, 0.5, 0, 0, 1],
-    [-0.5, -0.5, 0, 0, 0],
+    [-0.5, -0.5, 0, 0, 1],
+    [0.5, -0.5, 0, 1, 1],
+    [0.5, 0.5, 0, 1, 0],
+    [0.5, 0.5, 0, 1, 0],
+    [-0.5, 0.5, 0, 0, 0],
+    [-0.5, -0.5, 0, 0, 1],
   ];
   const tockePodatki = new Float32Array(tocke.flat());
   const buffer = gl.createBuffer();
