@@ -57,17 +57,18 @@ export class Igralec {
     }
     const premikY =
       this.hitrost * deltaCas * Math.sin(this.rotacija + Math.PI / 2);
-    if (premikY > 0) this.maxVisina += premikY;
-    if (this.pozicija[1] + premikY >= this.maxVisina - 2000)
-      this.pozicija[1] += premikY;
+    this.pozicija[1] += premikY;
+    if (premikY > 0)
+      this.maxVisina = Math.max(this.pozicija[1], this.maxVisina);
 
     const premikX =
       this.hitrost * deltaCas * Math.cos(this.rotacija + Math.PI / 2);
-    if (
-      this.pozicija[0] + premikX >= povX - 1000 &&
-      this.pozicija[0] + premikX <= povX + 1000
-    )
-      this.pozicija[0] += premikX;
+    this.pozicija[0] += premikX;
+
+    if (this.pozicija[0] < povX - 1500) this.pozicija[0] = povX - 1500;
+    if (this.pozicija[0] > povX + 1500) this.pozicija[0] = povX + 1500;
+    if (this.pozicija[1] < this.maxVisina - 2000)
+      this.pozicija[1] = this.maxVisina - 2000;
 
     this.prejsniKlic = performance.now();
   }

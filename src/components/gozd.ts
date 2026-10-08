@@ -51,7 +51,7 @@ export class Gozd {
           perlinVrednost <= 0.25 &&
           nakljucnaVr >= mejnaVrednost
         )
-          this.smreka.dodaj([j, i], [32, 64]);
+          this.smreka.dodaj([j, i], [128, 256]);
         if (
           0.25 <= perlinVrednost &&
           perlinVrednost <= 0.5 &&
