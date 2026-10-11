@@ -1,15 +1,13 @@
-import { PolarGridHelper } from "three/src/Three.Core.js";
 import { narediBuffer } from "../services/bufferji.ts";
 import { narediProgram } from "../services/narediProgram.ts";
 import { naloziTeksturo } from "../services/textura.ts";
 import { vec2, mat4 } from "gl-matrix";
-import { ior } from "three/src/nodes/core/PropertyNode.js";
 
 export class Ploscice {
-  private tekstura: WebGLTexture;
-  private podatki: number[];
-  private posebiBuffer: WebGLBuffer;
-  private vao: WebGLVertexArrayObject;
+  private readonly tekstura: WebGLTexture;
+  private readonly podatki: number[];
+  private readonly posebiBuffer: WebGLBuffer;
+  private readonly vao: WebGLVertexArrayObject;
   private stPloscic: number = 0;
 
   private static gl: WebGL2RenderingContext;

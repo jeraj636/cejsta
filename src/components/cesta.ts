@@ -1,14 +1,12 @@
 import { mat4, vec2 } from "gl-matrix";
 import { Ploscice } from "./ploscice.ts";
 import { perlin } from "../services/perlinNoise.ts";
-import { abs } from "three/src/nodes/math/MathNode.js";
-import { setCurrentStack } from "three/src/nodes/tsl/TSLCore.js";
 
 export class Cesta {
-  private obrobe: Ploscice;
-  private sredisce: Ploscice;
-  private seme: number;
-  private limita: vec2;
+  private readonly obrobe: Ploscice;
+  private readonly sredisce: Ploscice;
+  private readonly seme: number;
+  private readonly limita: vec2;
   private static gl: WebGL2RenderingContext;
   private visina: number;
   private xPoz: number;
@@ -59,8 +57,8 @@ export class Cesta {
       this.sredisce.odbij();
     }
     while (
-      this.obrobe.at(this.obrobe.lenght() - 1)[1] - visinaDejanska <
-      this.limita[1]
+      this.obrobe.at(this.obrobe.lenght() - 1)[1] <
+      visinaDejanska + 6000
     ) {
       this.generirajNovo();
     }

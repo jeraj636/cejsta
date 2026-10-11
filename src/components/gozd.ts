@@ -1,15 +1,14 @@
 import { mat4, vec2 } from "gl-matrix";
 import { Ploscice } from "./ploscice";
-import { or } from "three/src/nodes/math/OperatorNode.js";
 import { perlin } from "../services/perlinNoise";
 
 export class Gozd {
-  private smreka: Ploscice;
-  private lsitovec: Ploscice;
-  private trava: Ploscice;
-  private seme: number;
-  private mejeX: vec2;
-  private mejeY: vec2;
+  private readonly smreka: Ploscice;
+  private readonly lsitovec: Ploscice;
+  private readonly trava: Ploscice;
+  private readonly seme: number;
+  private readonly mejeX: vec2;
+  private readonly mejeY: vec2;
   private obdelanaVisina: number;
   constructor(
     smreka: Ploscice,
@@ -43,7 +42,6 @@ export class Gozd {
           (this.seme * i) / deljenje,
           (this.seme * j) / deljenje,
         );
-
         let nakljucnaVr = Math.random();
         const CestniFaktor = Math.abs(j - povCeste) / 1000;
         const mejnaVrednost = 1 - 0.0009 * CestniFaktor;

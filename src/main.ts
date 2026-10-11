@@ -1,12 +1,7 @@
 import { Barva } from "./components/barva.ts";
-import { narediBuffer } from "./services/bufferji.ts";
 import { Objekt } from "./components/objekt.ts";
-import { narediProgram } from "./services/narediProgram.ts";
-import { vec2, mat4 } from "gl-matrix";
-import { Ploscice } from "./components/ploscice.js";
-import { perlin } from "./services/perlinNoise.ts";
+import { mat4 } from "gl-matrix";
 import { Cesta, CestaFactoriy } from "./components/cesta.ts";
-import { or } from "three/src/nodes/math/OperatorNode.js";
 import { Igralec } from "./components/igralec.ts";
 import { GozdFactory } from "./components/gozd.ts";
 
@@ -47,7 +42,7 @@ await Cesta.init(gl);
 let cesta = await CestaFactoriy.ustvari(
   "../assets/images/pot_obroba.png",
   "../assets/images/pot_sredisce.png",
-  32,
+  Math.round(Math.random() * 10000),
   [-500, platno.height],
   gl,
   platno.width,
