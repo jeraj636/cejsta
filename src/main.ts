@@ -38,7 +38,7 @@ window.addEventListener("keyup", (event) => {
   inputStanje.delete(event.key);
 });
 
-const odzadje = new Barva("#D0E2A6");
+const odzadje = new Barva("#83C28C");
 
 await Objekt.init(gl);
 

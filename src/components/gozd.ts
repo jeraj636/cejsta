@@ -38,6 +38,7 @@ export class Gozd {
     const deljenje = 300;
     for (let i = this.obdelanaVisina; i < lokIgralca[1] + 6000; i += 5) {
       for (let j = -3000; j < 3000; j += 5) {
+        if (Math.abs(j - povCeste) < 200) continue;
         let perlinVrednost = perlin(
           (this.seme * i) / deljenje,
           (this.seme * j) / deljenje,
@@ -57,7 +58,7 @@ export class Gozd {
           perlinVrednost <= 0.5 &&
           nakljucnaVr >= mejnaVrednost
         )
-          this.lsitovec.dodaj([j, i], [32, 64]);
+          this.lsitovec.dodaj([j, i], [128, 256]);
       }
     }
     this.obdelanaVisina = lokIgralca[1] + 6000;
